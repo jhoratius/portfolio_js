@@ -1,9 +1,12 @@
 #info {
-    position : absolute;
-    top:570px;
-    width:100%;
-    text-align: center;
-    z-index: 100;
-    display: block;
-    color :azure;
+	position : absolute;
+	text-align: center;
+	display: block;
+
+	z-index: 100;
+	width:100%;
+	top:570px;
+
+	color :azure;
+	font-size: 2rem;
 }
