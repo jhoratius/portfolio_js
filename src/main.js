@@ -7,6 +7,8 @@ import { Water } from 'three/examples/jsm/objects/Water.js';
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
 const renderer = new THREE.WebGLRenderer({antialias : true});
+renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.setClearColor(0xffffff, 1);
 
 renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
@@ -18,7 +20,14 @@ const waterNormals = new THREE.TextureLoader().load('https://threejs.org/example
 	texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
 });
 
-const water = new Water(new THREE.PlaneGeometry(2, 2), {
+const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+scene.add(ambientLight);
+
+const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+directionalLight.position.set(0, 1, 0);
+scene.add(directionalLight);
+
+const water = new Water(new THREE.PlaneGeometry(1, 1), {
 	textureWidth: 512,
 	textureHeight: 512,
 	waterNormals: waterNormals,
@@ -30,7 +39,7 @@ const water = new Water(new THREE.PlaneGeometry(2, 2), {
 	fog: scene.fog !== undefined
 });
 
-const cubeMaterial = new THREE.MeshBasicMaterial( { color : 0x00ff00, side: THREE.BackSide });
+const cubeMaterial = new THREE.MeshStandardMaterial( { color : 0x0f0ff0, side: THREE.BackSide });
 const cube = new THREE.Mesh(geometry, cubeMaterial);
 scene.add(cube);
 
@@ -38,7 +47,10 @@ water.position.y = 0.5;
 water.rotation.x = -Math.PI / 2;
 cube.add(water);
 
-camera.position.z = 2;
+camera.position.set(2, 1, 4);
+camera.lookAt(scene.position);
+
+// scene.add(water);
 
 function animate() {
 	requestAnimationFrame(animate);
@@ -49,9 +61,9 @@ function animate() {
 animate();
 
 // display a msg when WebGL is not supported
-//if ( WebGL.isWebGL2Available() ) {
-//	animate();
-//} else {
-//	const warning = WebGL.getWebGL2ErrorMessage();
-//	document.getElementById( 'container' ).appendChild( warning );
-//}
+// if ( WebGL.isWebGL2Available() ) {
+// 	animate();
+// } else {
+// 	const warning = WebGL.getWebGL2ErrorMessage();
+// 	document.getElementById( 'container' ).appendChild( warning );
+// }
