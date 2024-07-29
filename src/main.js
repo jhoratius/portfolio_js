@@ -8,14 +8,14 @@ const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
 const renderer = new THREE.WebGLRenderer({antialias : true});
 renderer.setSize(window.innerWidth, window.innerHeight);
-renderer.setClearColor(0xffffff, 1);
+renderer.setClearColor(0x0fffff, 1);
 
 renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
 
 const controls = new OrbitControls(camera, renderer.domElement);
 
-const geometry = new THREE.BoxGeometry(1, 1, 1);
+const geometry = new THREE.BoxGeometry(50, 50, 50);
 const waterNormals = new THREE.TextureLoader().load('https://threejs.org/examples/textures/waternormals.jpg', function (texture) {
 	texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
 });
@@ -27,14 +27,26 @@ const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
 directionalLight.position.set(0, 1, 0);
 scene.add(directionalLight);
 
-const water = new Water(new THREE.PlaneGeometry(1, 1), {
+const water = new Water(new THREE.PlaneGeometry(51, 51), {
 	textureWidth: 512,
 	textureHeight: 512,
 	waterNormals: waterNormals,
 	alpha: 1.0,
 	sunDirection: new THREE.Vector3(),
-	sunColor: 0xffffff,
-	waterColor: 0x001e0f,
+	sunColor: 0xFFC300,
+	waterColor: 0x0096FF,
+	distortionScale: 3.7,
+	fog: scene.fog !== undefined
+});
+
+const water2 = new Water(new THREE.PlaneGeometry(51, 51), {
+	textureWidth: 512,
+	textureHeight: 512,
+	waterNormals: waterNormals,
+	alpha: 1.0,
+	sunDirection: new THREE.Vector3(),
+	sunColor: 0xFFC300,
+	waterColor: 0x0096FF,
 	distortionScale: 3.7,
 	fog: scene.fog !== undefined
 });
@@ -42,15 +54,16 @@ const water = new Water(new THREE.PlaneGeometry(1, 1), {
 const cubeMaterial = new THREE.MeshStandardMaterial( { color : 0x0f0ff0, side: THREE.BackSide });
 const cube = new THREE.Mesh(geometry, cubeMaterial);
 scene.add(cube);
+cube.position.y = -25;
 
-water.position.y = 0.5;
+water.position.y = 0.51;
 water.rotation.x = -Math.PI / 2;
 cube.add(water);
 
 camera.position.set(2, 1, 4);
 camera.lookAt(scene.position);
 
-// scene.add(water);
+scene.add(water);
 
 function animate() {
 	requestAnimationFrame(animate);
